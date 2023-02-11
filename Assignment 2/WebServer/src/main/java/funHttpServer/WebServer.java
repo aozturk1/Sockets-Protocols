@@ -25,6 +25,8 @@ import java.util.Random;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import java.nio.charset.Charset;
+import java.lang.NumberFormatException;
+import java.lang.ArithmeticException;
 
 class WebServer {
   public static void main(String args[]) {
@@ -201,21 +203,39 @@ class WebServer {
           // extract path parameters
           query_pairs = splitQuery(request.replace("multiply?", ""));
 
+	  Integer num1 = 0;
+	  Integer num2 = 0;
+	  Integer num3 = 0;
+	  try{
           // extract required fields from parameters
-          Integer num1 = Integer.parseInt(query_pairs.get("num1"));
-          Integer num2 = Integer.parseInt(query_pairs.get("num2"));
-
+          num1 = Integer.parseInt(query_pairs.get("num1"));
+          num2 = Integer.parseInt(query_pairs.get("num2"));
+	  }catch (NumberFormatException e) {
+		builder.append("HTTP/1.1 400 Bad Request\n");
+		builder.append("Content-Type: text/html; charset=utf-8\n");
+		builder.append("\n");
+		builder.append("Error: Invalid input, num1 and num2 should be integers");
+	  	num3 = 1;
+	  }
+	  Integer result = 0;
+	 // try{
           // do math
-          Integer result = num1 * num2;
-
+          result = num1 * num2;
+	 // } catch (ArithmeticExceptin e){
           // Generate response
-          builder.append("HTTP/1.1 200 OK\n");
-          builder.append("Content-Type: text/html; charset=utf-8\n");
-          builder.append("\n");
-          builder.append("Result is: " + result);
-
+          //	builder.append("HTTP/1.1 500 Internal Server Error\n");
+          //	builder.append("Content-Type: text/html; charset=utf-8\n");
+          //	builder.append("\n");
+          //	builder.append("Error: An arithmetic error occurred while performing the calculation");
+	 // }	
           // TODO: Include error handling here with a correct error code and
           // a response that makes sense
+	  if (num3 == 0){
+		builder.append("HTTP/1.1 200 OK\n");
+	     	builder.append("ContentType: text/html; charset=utf-8\n");
+		builder.append("\n");
+		builder.append("Result is: " + result);	
+	  }
 
         } else if (request.contains("github?")) {
           // pulls the query from the request and runs it with GitHub's REST API
@@ -229,14 +249,135 @@ class WebServer {
           Map<String, String> query_pairs = new LinkedHashMap<String, String>();
           query_pairs = splitQuery(request.replace("github?", ""));
           String json = fetchURL("https://api.github.com/" + query_pairs.get("query"));
-          System.out.println(json);
+          //System.out.println(json);
 
-          builder.append("HTTP/1.1 200 OK\n");
-          builder.append("Content-Type: text/html; charset=utf-8\n");
-          builder.append("\n");
-          builder.append("Check the todos mentioned in the Java source file");
+//          while(true){
+//            if(something.id == -1)
+//              return;
+//            else
+//              builder.append("HTTP/1.1 200 OK\n");
+//              builder.append("Content-Type: text/json; charset=utf-8\n");
+//              builder.append("\n");
+//              builder.append(fullname);
+//              builder.append(id);
+//              builder.append(loginname);
+//          }
           // TODO: Parse the JSON returned by your fetch and create an appropriate
           // response based on what the assignment document asks for
+
+        } else if (request.contains("currency?")) {
+          //converts from dollar to euros and vice versa
+          Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+          // extract path parameters
+          query_pairs = splitQuery(request.replace("currency?", ""));
+
+          // extract required fields from parameters
+          String str = query_pairs.get("str");
+          String strNum = query_pairs.get("num");
+
+          Double result = 0.0;
+
+          // check if the parameters are valid
+          if (str == null || strNum == null) {
+            builder.append("HTTP/1.1 400 Bad Request\n");
+            builder.append("Content-Type: text/html; charset=utf-8\n");
+            builder.append("\n");
+            builder.append("Error: Invalid parameters. str and num are required.");
+          }
+
+          try {
+            Integer num = Integer.parseInt(strNum);
+            String strng = "";
+
+            // do math
+            if (str.compareToIgnoreCase("dollar") == 0) {
+              result = 0.93 * num;
+              strng = "euro";
+            } else if (str.compareToIgnoreCase("euro") == 0) {
+              result = 1.07 * num;
+              strng = "dollar";
+            } else {
+              builder.append("HTTP/1.1 401 Bad Request\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("\n");
+              builder.append("Error: Invalid currency type. str must be either 'dollar' or 'euro'.");
+            }
+
+            // Generate response
+            builder.append("HTTP/1.1 200 OK\n");
+            builder.append("Content-Type: text/html; charset=utf-8\n");
+            builder.append("\n");
+            builder.append("Result is: " + num + " " + str + " is " + result + " " + strng);
+          } catch (NumberFormatException e) {
+            builder.append("HTTP/1.1 400 Bad Request\n");
+            builder.append("Content-Type: text/html; charset=utf-8\n");
+            builder.append("\n");
+            builder.append("Error: num must be an integer.");
+          }
+
+        } else if (request.contains("game?")) {
+            // play a rock-paper-scissors game
+            Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+            // extract path parameters
+            query_pairs = splitQuery(request.replace("game?", ""));
+
+            // extract required fields from parameters
+            String player1 = query_pairs.get("player1");
+            String player2 = query_pairs.get("player2");
+
+            // check if the parameters are valid
+            if (player1 == null || player2 == null) {
+              builder.append("HTTP/1.1 401 Bad Request\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("\n");
+              builder.append("Error: Invalid parameters. player1 and player2 are required.");
+            }
+
+            player1 = player1.toLowerCase();
+            player2 = player2.toLowerCase();
+
+            if (!(player1.equals("rock") || player1.equals("paper") || player1.equals("scissors"))) {
+              builder.append("HTTP/1.1 400 Bad Request\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("\n");
+              builder.append("Error: player1 must be either 'rock', 'paper', or 'scissors'.");
+            }
+
+            if (!(player2.equals("rock") || player2.equals("paper") || player2.equals("scissors"))) {
+              builder.append("HTTP/1.1 400 Bad Request\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("\n");
+              builder.append("Error: player2 must be either 'rock', 'paper', or 'scissors'.");
+            }
+
+            String result = "";
+            if (player1.equals(player2)) {
+              result = "Draw!";
+            } else if (player1.equals("rock")) {
+              if (player2.equals("scissors")) {
+                result = "Player 1 wins!";
+              } else {
+                result = "Player 2 wins!";
+              }
+            } else if (player1.equals("paper")) {
+              if (player2.equals("rock")) {
+                result = "Player 1 wins!";
+              } else {
+                result = "Player 2 wins!";
+              }
+            } else if (player1.equals("scissors")) {
+              if (player2.equals("paper")) {
+                result = "Player 1 wins!";
+              } else {
+                result = "Player 2 wins!";
+              }
+            }
+
+            // Generate response
+            builder.append("HTTP/1.1 200 OK\n");
+            builder.append("Content-Type: text/html; charset=utf-8\n");
+            builder.append("\n");
+            builder.append("Result: " + result);
 
         } else {
           // if the request is not recognized at all
