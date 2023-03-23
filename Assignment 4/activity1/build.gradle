@@ -11,7 +11,7 @@ dependencies {
 //define main class
 mainClassName = 'Concentration'
 
-task runServer(type: JavaExec) {
+task runTask1(type: JavaExec) {
   group 'server'
   description 'Creates Server socket waits for messages'
 
@@ -26,7 +26,7 @@ task runServer(type: JavaExec) {
   }
 }
 
-task runThreadedServer(type: JavaExec) {
+task runTask2(type: JavaExec) {
   group 'server'
   description 'Creates Server socket waits for messages'
 
@@ -38,6 +38,21 @@ task runThreadedServer(type: JavaExec) {
   // run with arguments e.g.: gradle runThreadedServer -Pport=9099 -q --console=plain
   if (project.hasProperty('port')) {
     args(project.getProperty('port'));
+  }
+}
+
+task runTask3(type: JavaExec) {
+  group 'server'
+  description 'Creates Server socket waits for messages'
+
+  classpath = sourceSets.main.runtimeClasspath
+
+  main = 'taskthree.ThreadPoolServer'
+  standardInput = System.in
+
+  // run with arguments e.g.: gradle runThreadedServer -Pport=9099 -q --console=plain
+  if (project.hasProperty('port') && project.hasProperty('pool')) {
+    args(project.getProperty('port'), project.getProperty('pool'));
   }
 }
 
