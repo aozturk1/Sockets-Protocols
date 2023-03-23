@@ -3,7 +3,7 @@ package taskone;
 import java.util.List;
 import java.util.ArrayList;
 
-class StringList {
+public class StringList {
     
     List<String> strings = new ArrayList<String>();
 
@@ -22,11 +22,11 @@ class StringList {
         return String.valueOf(strings.indexOf(str));
     }
 
-    public void delete(int str) {
+    synchronized public void delete(int str) {
         strings.remove(str);
     }
 
-    public void prepend(String str) {
+    synchronized public void prepend(String str) {
         String[] strArray = str.split(" ");
         String str2 = strings.get(Integer.parseInt(strArray[0])) + strArray[1];
         strings.add(Integer.parseInt(strArray[0]), str2);
