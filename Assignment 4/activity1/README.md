@@ -1,3 +1,6 @@
+Video Link:
+https://www.youtube.com/watch?v=5hMe42zlc1s
+
 # Assignment 4 Activity 1
 ## Description
 A simple single-threaded server as Task1 and a multi-threaded server for Task2 that allows threads to grow unbounded and lastly a Task3 version that sets
