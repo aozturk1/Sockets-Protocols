@@ -7,30 +7,42 @@ public class StringList {
     
     List<String> strings = new ArrayList<String>();
 
-    public void add(String str) {
+    public boolean add(String str) {
         int pos = strings.indexOf(str);
         if (pos < 0) {
             strings.add(str);
+            return true;
+        } else {
+            return false;
         }
     }
 
-    public void clear() {
-        strings.clear();
+    public boolean clear() {
+        if(strings.isEmpty()) {
+            return false;
+        } else {
+            strings.clear();
+            return true;
+        }
     }
 
     public String find(String str) {
         return String.valueOf(strings.indexOf(str));
     }
 
-    synchronized public void delete(int str) {
-        strings.remove(str);
+    synchronized public void delete(int index) {
+        if (index >= 0 && index < strings.size()) {
+            strings.remove(index);
+        }
     }
 
     synchronized public void prepend(String str) {
         String[] strArray = str.split(" ");
-        String str2 = strings.get(Integer.parseInt(strArray[0])) + strArray[1];
-        strings.add(Integer.parseInt(strArray[0]), str2);
-        strings.remove(Integer.parseInt(strArray[0])+1);
+        int index = Integer.parseInt(strArray[0]);
+        if (index >= 0 && index < strings.size()) {
+            String oldString = strings.get(index);
+            strings.set(index, strArray[1] + oldString);
+        }
     }
 
     public boolean contains(String str) {

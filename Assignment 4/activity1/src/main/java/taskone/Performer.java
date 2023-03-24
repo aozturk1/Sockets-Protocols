@@ -34,19 +34,29 @@ public class Performer {
 
     public JSONObject add(String str) {
         JSONObject json = new JSONObject();
-        json.put("ok", true);
-        json.put("type", "add");
-        state.add(str);
-        json.put("data", state.toString());
+        boolean error = state.add(str);
+        if (!error){
+            json.put("ok", false);
+            json.put("message", "This string already exists!");
+        } else {
+            json.put("ok", true);
+            json.put("type", "add");
+            json.put("data", state.toString());
+        }
         return json;
     }
 
     public JSONObject clear() {
         JSONObject json = new JSONObject();
-        json.put("ok", true);
-        json.put("type", "clear");
-        state.clear();
-        json.put("data", state.toString());
+        boolean error = state.clear();
+        if (!error){
+            json.put("ok", false);
+            json.put("message", "List already empty!");
+        } else {
+            json.put("ok", true);
+            json.put("type", "clear");
+            json.put("data", state.toString());
+        }
         return json;
     }
 
