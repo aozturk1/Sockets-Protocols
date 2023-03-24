@@ -23,6 +23,8 @@ task runTask1(type: JavaExec) {
   // run with arguments e.g.: gradle runServer -Pport=9099 -q --console=plain
   if (project.hasProperty('port')) {
     args(project.getProperty('port'));
+  } else {
+    args("8000");
   }
 }
 
@@ -38,6 +40,8 @@ task runTask2(type: JavaExec) {
   // run with arguments e.g.: gradle runThreadedServer -Pport=9099 -q --console=plain
   if (project.hasProperty('port')) {
     args(project.getProperty('port'));
+  } else {
+    args("8000");
   }
 }
 
@@ -51,8 +55,15 @@ task runTask3(type: JavaExec) {
   standardInput = System.in
 
   // run with arguments e.g.: gradle runThreadedServer -Pport=9099 -q --console=plain
-  if (project.hasProperty('port') && project.hasProperty('pool')) {
-    args(project.getProperty('port'), project.getProperty('pool'));
+  if(project.hasProperty('port')){
+    args(project.getProperty('port'));
+  } else {
+    args("8000");
+  }
+  if(project.hasProperty("pool")){
+    args(project.getProperty('pool'));
+  } else {
+    args("2");
   }
 }
 
@@ -67,8 +78,15 @@ task runClient(type: JavaExec) {
   standardInput = System.in
   
   // run with arguments e.g.: gradle runClient -Phost=localhost -Pport=9099 -q --console=plain
-  if (project.hasProperty("host") && project.hasProperty('port')) {
-    args(project.getProperty('host'), project.getProperty('port'));
+  if(project.hasProperty("host")){
+    args(project.getProperty('host'));
+  } else {
+    args("localhost");
+  }
+  if(project.hasProperty('port')){
+    args(project.getProperty('port'));
+  } else {
+    args("8000");
   }
 }
 

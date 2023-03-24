@@ -39,11 +39,26 @@ The program you are given should run out of the box, but it is not threaded nor 
 ### Terminal
 Base Code, please use the following commands:
 ```
-    For Server, run "gradle runServer -Pport=9099 -q --console=plain"
-```
+    Default port = 8000
+            host = localhost
+            pool = 2
 ```   
     For Client, run "gradle runClient -Phost=localhost -Pport=9099 -q --console=plain"
+    or
+    "gradle runClient" for default
 ```   
-
-
-
+```
+    For Task1, run "gradle runTask1" for deafult
+    or
+    "gradle runTask1 -Pport=9099 -q --console=plain"
+```
+```
+    For Task2, run "gradle runTask2" for default
+    or
+    "gradle runTask2 -Pport=9099 -q --console=plain"
+```
+```
+    For Task3, run "gradle runTask3" for default
+    or
+    "gradle runTask3 -Pport=9099 -Ppool=3 -q --console=plain"
+```
