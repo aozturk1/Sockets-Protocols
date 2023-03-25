@@ -59,7 +59,30 @@ class SockBaseClient {
             // print the server response. 
             System.out.println(response.getMessage());
 
-            System.out.println("* \nWhat would you like to do? \n 1 - to see the leader board \n 2 - to enter a game \n 3 - quit the game");
+            while (true) {
+                System.out.println("* \nWhat would you like to do? \n 1 - to see the leader board \n 2 - to enter a game \n 3 - quit the game");
+
+                Scanner scan = new Scanner(System.in);
+                String str = scan.nextLine();
+                //Request rq = null;
+                Response rp;
+
+                if (str == "1") {
+                    Request rq = Request.newBuilder()
+                            .setOperationType(Request.OperationType.LEADER)
+                            .setName(strToSend).build();
+                    rq.writeDelimitedTo(out);
+                } else if (str == "2") {
+
+                } else if (str == "3") {
+                    Request rq = Request.newBuilder()
+                            .setOperationType(Request.OperationType.QUIT)
+                            .setName(strToSend).build();
+                    rq.writeDelimitedTo(out);
+                } else {
+                    System.out.println("Invalid Option!");
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
