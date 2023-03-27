@@ -61,7 +61,7 @@ public class Game {
                 col = 0;
                 int randInt = rand.nextInt(files.size());
                 File file = new File(
-                        Game.class.getResource("/"+files.get(randInt)).getFile()
+                        Game.class.getResource("/"+files.get(randInt)).getFile().replaceAll("%20", " ")
                         );
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 String line;
@@ -94,12 +94,7 @@ public class Game {
             hidden = new char[row][col];
             for(int i = 0; i < row; i++){
                 for(int j = 0; j < col; j++){
-                    if(i == 0 || j < 2)
-                        hidden[i][j] = original[i][j];
-                    else if(original[i][j] != '|')
                         hidden[i][j] = '?';
-                    else
-                        hidden[i][j] = '|';
                 }
             }
         }

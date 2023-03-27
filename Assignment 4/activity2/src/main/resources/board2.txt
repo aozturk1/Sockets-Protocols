@@ -1,3 +1,2 @@
-  1 2 3
-a h|d|f
-b d|f|h
+hdf
+dfh
