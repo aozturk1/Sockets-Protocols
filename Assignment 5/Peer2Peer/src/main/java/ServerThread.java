@@ -28,6 +28,7 @@ public class ServerThread extends Thread{
 			while (true) {
 				Socket sock = serverSocket.accept();
 				listeningSockets.add(sock);
+				//listenNewClient();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -46,5 +47,28 @@ public class ServerThread extends Thread{
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-	}	
+	}
+
+	/**
+	 * Open listening to new sockets that send request to this port
+	 */
+	void listenNewClient() {
+		try {
+			while (true) {
+				Socket sock = serverSocket.accept();
+				boolean exist = false;
+				for (Socket s : listeningSockets) {
+					if (sock.getPort() == s.getPort()) {
+						exist = true;
+					}
+				}
+				if(!exist){
+					listeningSockets.add(sock);
+
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

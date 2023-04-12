@@ -38,6 +38,11 @@ public class Peer {
 		serverThread.start();
 		Peer peer = new Peer(bufferedReader, args[0], serverThread);
 		peer.updateListenToPeers();
+//		while (true) {
+//			Socket sock = serverThread.accept();
+//			listeningSockets.add(sock);
+//			listenNewClient();
+//		}
 	}
 	
 	/**
