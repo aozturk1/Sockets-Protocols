@@ -14,12 +14,12 @@ import java.util.Set;
 
 public class ServerThread extends Thread{
 	private ServerSocket serverSocket;
-	private Set<Socket> listeningSockets = new HashSet<Socket>();
-	
+	public Set<Socket> listeningSockets = new HashSet<Socket>();
+
 	public ServerThread(String portNum) throws IOException {
 		serverSocket = new ServerSocket(Integer.valueOf(portNum));
 	}
-	
+
 	/**
 	 * Starting the thread, we are waiting for clients wanting to talk to us, then save the socket in a list
 	 */
@@ -28,13 +28,12 @@ public class ServerThread extends Thread{
 			while (true) {
 				Socket sock = serverSocket.accept();
 				listeningSockets.add(sock);
-				//listenNewClient();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Sending the message to the OutputStream for each socket that we saved
 	 */
@@ -43,31 +42,8 @@ public class ServerThread extends Thread{
 			for (Socket s : listeningSockets) {
 				PrintWriter out = new PrintWriter(s.getOutputStream(), true);
 				out.println(message);
-		     }
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Open listening to new sockets that send request to this port
-	 */
-	void listenNewClient() {
-		try {
-			while (true) {
-				Socket sock = serverSocket.accept();
-				boolean exist = false;
-				for (Socket s : listeningSockets) {
-					if (sock.getPort() == s.getPort()) {
-						exist = true;
-					}
-				}
-				if(!exist){
-					listeningSockets.add(sock);
-
-				}
 			}
-		} catch (Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}

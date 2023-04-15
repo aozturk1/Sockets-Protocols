@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Iterator;
 
 /**
  * This is the main class for the peer2peer program.
@@ -15,11 +17,19 @@ public class Peer {
 	private String username;
 	private BufferedReader bufferedReader;
 	private ServerThread serverThread;
-	
-	public Peer(BufferedReader bufReader, String username, ServerThread serverThread){
+	private String thisPort;
+	private String thatPort;
+	private boolean first;
+	Socket firstSocket;
+
+	public Peer(BufferedReader bufReader, String username, ServerThread serverThread, String thisPort, String thatPort, boolean first, Socket firstSocket){
 		this.username = username;
 		this.bufferedReader = bufReader;
 		this.serverThread = serverThread;
+		this.thisPort = thisPort;
+		this.thatPort = thatPort;
+		this.first = first;
+		this.firstSocket = firstSocket;
 	}
 	/**
 	 * Main method saying hi and also starting the Server thread where other peers can subscribe to listen
@@ -31,34 +41,53 @@ public class Peer {
 
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 		String username = args[0];
-		System.out.println("Hello " + username + " and welcome! Your port will be " + args[1]);
-
 		// starting the Server Thread, which waits for other peers to want to connect
 		ServerThread serverThread = new ServerThread(args[1]);
 		serverThread.start();
-		Peer peer = new Peer(bufferedReader, args[0], serverThread);
+		Peer peer = new Peer(bufferedReader, username, serverThread, null, null, false, null);
+		if (args.length == 2) {
+			System.out.println("Hello " + username + " and welcome! Your port will be " + args[1]);
+			System.out.println("Waiting for others to connect");
+			peer.thisPort = args[1];
+			peer.thatPort = "-1";
+			peer.first = true;
+		} else if (args.length == 3) {
+			System.out.println("Hello " + username + " and welcome! Your port will be " + args[1]);
+			System.out.println("If possible, you will be connected to "+ args[2] + " and it's connections");
+			peer.thisPort = args[1];
+			peer.thatPort = args[2];
+			Socket sock = new Socket("localhost", Integer.parseInt(peer.thatPort));
+			serverThread.listeningSockets.add(sock);
+		} else {
+			System.out.println("Invalid number of parameters!");
+		}
+		while(serverThread.listeningSockets.isEmpty()) {
+			Thread.sleep(1000);
+
+		}
+		Iterator<Socket> iterator = serverThread.listeningSockets.iterator();
+		if (iterator.hasNext()) {
+			peer.firstSocket = iterator.next();
+		}
+
 		peer.updateListenToPeers();
-//		while (true) {
-//			Socket sock = serverThread.accept();
-//			listeningSockets.add(sock);
-//			listenNewClient();
-//		}
 	}
-	
+
 	/**
 	 * User is asked to define who they want to subscribe/listen to
 	 * Per default we listen to no one
 	 *
 	 */
 	public void updateListenToPeers() throws Exception {
-		System.out.println("> Who do you want to listen to? Enter host:port");
-		String input = bufferedReader.readLine();
-		String[] setupValue = input.split(" ");
-		for (int i = 0; i < setupValue.length; i++) {
-			String[] address = setupValue[i].split(":");
+//		System.out.println("> Who do you want to listen to? Enter host:port");
+//		String input = bufferedReader.readLine();
+//		String[] setupValue = input.split(" ");
+//		for (Socket s : serverThread.listeningSockets) {
+
 			Socket socket = null;
 			try {
-				socket = new Socket(address[0], Integer.valueOf(address[1]));
+//				socket = new Socket("localhost", s.getPort());
+				socket = firstSocket;
 				new ClientThread(socket).start();
 			} catch (Exception c) {
 				if (socket != null) {
@@ -69,11 +98,11 @@ public class Peer {
 					System.exit(0);
 				}
 			}
-		}
+//		}
 
 		askForInput();
 	}
-	
+
 	/**
 	 * Client waits for user to input their message or quit
 	 *
@@ -92,12 +121,13 @@ public class Peer {
 				} else {
 					// we are sending the message to our server thread. this one is then responsible for sending it to listening peers
 					serverThread.sendMessage("{'username': '"+ username +"','message':'" + message + "'}");
-				}	
+				}
 			}
 			System.exit(0);
-		
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 }
+
