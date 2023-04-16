@@ -1,4 +1,4 @@
-Video Link:
+Video Link: https://youtu.be/8EEUfyCWr3g
 
 # Assignment 5 Activity 1 Peer2Peer
 ## Description
