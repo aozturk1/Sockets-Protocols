@@ -43,3 +43,4 @@ gradle runPeer --args "Name1 7000" --console=plain -q
 gradle runPeer --args "Name2 8000 7000" --console=plain -q
 
 gradle runPeer --args "Name3 9000 7000" --console=plain -q
+
