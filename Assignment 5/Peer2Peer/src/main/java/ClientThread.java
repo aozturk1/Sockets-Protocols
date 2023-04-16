@@ -6,9 +6,9 @@ import java.net.Socket;
 import org.json.*;
 
 /**
- * Client 
+ * Client
  * This is the Client thread class, there is a client thread for each peer we are listening to.
- * We are constantly listening and if we get a message we print it. 
+ * We are constantly listening and if we get a message we print it.
  */
 
 public class ClientThread extends Thread {

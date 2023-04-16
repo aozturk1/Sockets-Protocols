@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * SERVER
  * This is the ServerThread class that has a socket where we accept clients contacting us.
- * We save the clients ports connecting to the server into a List in this class. 
+ * We save the clients ports connecting to the server into a List in this class.
  * When we wand to send a message we send it to all the listening ports
  */
 

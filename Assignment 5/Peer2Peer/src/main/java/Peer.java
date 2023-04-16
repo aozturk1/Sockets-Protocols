@@ -6,11 +6,11 @@ import java.util.Iterator;
 
 /**
  * This is the main class for the peer2peer program.
- * It starts a client with a username and port. Next the peer can decide who to listen to. 
- * So this peer2peer application is basically a subscriber model, we can "blurt" out to anyone who wants to listen and 
+ * It starts a client with a username and port. Next the peer can decide who to listen to.
+ * So this peer2peer application is basically a subscriber model, we can "blurt" out to anyone who wants to listen and
  * we can decide who to listen to. We cannot limit in here who can listen to us. So we talk publicly but listen to only the other peers
- * we are interested in. 
- * 
+ * we are interested in.
+ *
  */
 
 public class Peer {
@@ -84,20 +84,20 @@ public class Peer {
 //		String[] setupValue = input.split(" ");
 //		for (Socket s : serverThread.listeningSockets) {
 
-			Socket socket = null;
-			try {
+		Socket socket = null;
+		try {
 //				socket = new Socket("localhost", s.getPort());
-				socket = firstSocket;
-				new ClientThread(socket).start();
-			} catch (Exception c) {
-				if (socket != null) {
-					socket.close();
-				} else {
-					System.out.println("Cannot connect, wrong input");
-					System.out.println("Exiting: I know really user friendly");
-					System.exit(0);
-				}
+			socket = firstSocket;
+			new ClientThread(socket).start();
+		} catch (Exception c) {
+			if (socket != null) {
+				socket.close();
+			} else {
+				System.out.println("Cannot connect, wrong input");
+				System.out.println("Exiting: I know really user friendly");
+				System.exit(0);
 			}
+		}
 //		}
 
 		askForInput();
@@ -130,4 +130,3 @@ public class Peer {
 		}
 	}
 }
-
