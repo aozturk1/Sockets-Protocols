@@ -1,0 +1,52 @@
+// set as java application
+apply plugin: 'application'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'org.json', name: 'json', version: '20200518'
+}
+
+def money = 1000
+
+//define main class
+mainClassName = 'Peer'
+
+task leader(type: JavaExec) {
+    description 'Runs a main'
+
+    classpath = sourceSets.main.runtimeClasspath
+
+    main = 'Leader'
+    standardInput = System.in
+
+    //run with> gradle leader --console=plain -q
+}
+
+task node(type: JavaExec) {
+    description 'Runs a main'
+
+    classpath = sourceSets.main.runtimeClasspath
+
+    main = 'Nnode'
+    standardInput = System.in
+
+    args money //money
+
+    //run with> gradle node --console=plain -q
+    //or
+    //run with> gradle node -Pmoney=1000 --console=plain -q
+}
+
+task client(type: JavaExec) {
+    description 'Runs a main'
+
+    classpath = sourceSets.main.runtimeClasspath
+
+    main = 'Client'
+    standardInput = System.in
+
+    //run with> gradle client --console=plain -q
+}
