@@ -1,0 +1,59 @@
+//A simple library with book donation and borrow requests
+//A service where you can borrow books or donate your own book to the library where
+//  other people can borrow and read them. Donate request takes the information of the
+//  book and borrow request asks for your name(as identification) and book you want to
+//  borrow. Finally, a books request that shows all the books in the library even if they
+//  are currently being borrowed.
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "service";
+option java_outer_classname = "LibraryProto";
+
+import "google/protobuf/empty.proto";
+
+package services;
+
+service Library {
+  rpc borrow (BorrowRequest) returns (BorrowResponse) {}
+  rpc donate (DonateRequest) returns (DonateResponse) {}
+  rpc books (google.protobuf.Empty) returns (BooksResponse) {}
+}
+
+message Book {
+  string title = 1;
+  string author = 2;
+  string has = 3;
+  string genre = 4;
+}
+
+message BorrowRequest {
+  string title = 1;
+  string has = 2;
+}
+
+message BorrowResponse {
+  bool isSuccess = 1;
+  string error = 2;
+  string message = 3;
+}
+
+message DonateRequest {
+  string title = 1;
+  string author = 2;
+  string has = 3;
+  string genre = 4;
+}
+
+message DonateResponse {
+  bool isSuccess = 1;
+  string error = 2;
+  string message = 3;
+}
+
+message BooksResponse {
+  bool isSuccess = 1;
+  string error = 2;
+  repeated Book books = 3;
+}

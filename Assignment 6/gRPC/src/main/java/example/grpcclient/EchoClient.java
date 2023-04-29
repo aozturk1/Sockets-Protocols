@@ -3,6 +3,8 @@ package example.grpcclient;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import service.*;
 import test.TestProtobuf;
@@ -23,6 +25,9 @@ public class EchoClient {
   private final JokeGrpc.JokeBlockingStub blockingStub2;
   private final RegistryGrpc.RegistryBlockingStub blockingStub3;
   private final RegistryGrpc.RegistryBlockingStub blockingStub4;
+  private final ZodiacGrpc.ZodiacBlockingStub blockingStub5;
+  private final RockPaperScissorsGrpc.RockPaperScissorsBlockingStub blockingStub6;
+  private final LibraryGrpc.LibraryBlockingStub blockingStub7;
 
   /** Construct client for accessing server using the existing channel. */
   public EchoClient(Channel channel, Channel regChannel) {
@@ -36,13 +41,12 @@ public class EchoClient {
     blockingStub2 = JokeGrpc.newBlockingStub(channel);
     blockingStub3 = RegistryGrpc.newBlockingStub(regChannel);
     blockingStub4 = RegistryGrpc.newBlockingStub(channel);
+    blockingStub5 = ZodiacGrpc.newBlockingStub(channel);
+    blockingStub6 = RockPaperScissorsGrpc.newBlockingStub(channel);
+    blockingStub7 = LibraryGrpc.newBlockingStub(channel);
   }
 
   public void askServerToParrot(String message) {
-
-    
-
-
     ClientRequest request = ClientRequest.newBuilder().setMessage(message).build();
     ServerResponse response;
     try {
@@ -57,8 +61,6 @@ public class EchoClient {
   public void askForJokes(int num) {
     JokeReq request = JokeReq.newBuilder().setNumber(num).build();
     JokeRes response;
-
-
     try {
       response = blockingStub2.getJoke(request);
     } catch (Exception e) {
@@ -74,7 +76,6 @@ public class EchoClient {
   public void setJoke(String joke) {
     JokeSetReq request = JokeSetReq.newBuilder().setJoke(joke).build();
     JokeSetRes response;
-
     try {
       response = blockingStub2.setJoke(request);
       System.out.println(response.getOk());
@@ -128,6 +129,96 @@ public class EchoClient {
       System.out.println(response.toString());
     } catch (Exception e) {
       System.err.println("RPC failed: " + e);
+      return;
+    }
+  }
+
+    public void play(String name, PlayReq.Played played) {
+    PlayReq request = PlayReq.newBuilder().setName(name).setPlay(played).build();
+    PlayRes response;
+    try {
+      //plays rock/paper/scis
+      response = blockingStub6.play(request);
+      System.out.println(response.toString());
+    } catch (Exception e) {
+      System.err.println("RPC failed: " + e);
+      return;
+    }
+  }
+
+  public void leaderboard() {
+    Empty request = Empty.newBuilder().build();
+    LeaderboardRes response;
+    try {
+      //returns the list players
+      response = blockingStub6.leaderboard(request);
+      System.out.println(response.toString());
+    } catch (Exception e) {
+      System.err.println("RPC failed: " + e);
+      return;
+    }
+  }
+
+  public void sign(String name, String month, int day) {
+    SignRequest request = SignRequest.newBuilder().setName(name).setMonth(month).setDay(day).build();
+    SignResponse response;
+    try {
+      //returns your zodiac traits
+      response = blockingStub5.sign(request);
+      System.out.println(response.toString());
+    } catch (Exception e) {
+      System.err.println("RPC failed: " + e);
+      return;
+    }
+  }
+
+  public void find(String sign) {
+    FindRequest request = FindRequest.newBuilder().setSign(sign).build();
+    FindResponse response;
+    try {
+      //returns list of people with your zodiac match
+      response = blockingStub5.find(request);
+      System.out.println(response.toString());
+    } catch (Exception e) {
+      System.err.println("RPC failed: " + e);
+      return;
+    }
+  }
+
+  public void borrow(String title, String has) {
+    BorrowRequest request = BorrowRequest.newBuilder().setTitle(title).setHas(has).build();
+    BorrowResponse response;
+    try {
+      response = blockingStub7.borrow(request);
+      System.out.println(response.toString());
+    } catch (Exception e) {
+      System.err.println("RPC failed: borrow " + e);
+      return;
+    }
+  }
+
+  public void donate(String title, String author, String genre) {
+    DonateRequest request = DonateRequest.newBuilder().setTitle(title).setAuthor(author).setHas("nobody").setGenre(genre).build();
+    DonateResponse response;
+    try {
+      //returns your zodiac traits
+      response = blockingStub7.donate(request);
+      System.out.println(response.toString());
+    } catch (Exception e) {
+      System.err.println("RPC failed: donate " + e);
+      return;
+    }
+  }
+
+  public void books() {
+    Empty request = Empty.newBuilder().build();
+    BooksResponse response;
+    try {
+      //returns the list of books
+      response = blockingStub7.books(request);
+      System.out.println(response.toString());
+    } catch (Exception e) {
+      System.err.println("RPC failed: books " + e);
       return;
     }
   }
@@ -196,49 +287,124 @@ public class EchoClient {
       // create client
       EchoClient client = new EchoClient(channel, regChannel);
 
-      // call the parrot service on the server
-      client.askServerToParrot(message);
+      System.out.println("THE LIST OF SERVICES:");
+      System.out.println("Services on the connected node. (without registry)");
+      client.getNodeServices(); // get all registered services
 
       // ask the user for input how many jokes the user wants
       BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+      Scanner scan = new Scanner(System.in);
 
-      // Reading data using readLine
-      System.out.println("How many jokes would you like?"); // NO ERROR handling of wrong input here.
-      String num = reader.readLine();
+      int service = 0;
+      boolean quit = false;
+      while (!quit) {
+        switch (service) {
+          case 1:
+            System.out.println("Enter...");
+            String var = scan.nextLine();
+            break;
+          case 2:
 
-      // calling the joked service from the server with num from user input
-      client.askForJokes(Integer.valueOf(num));
-
-      // adding a joke to the server
-      client.setJoke("I made a pencil with two erasers. It was pointless.");
-
-      // showing 6 joked
-      client.askForJokes(Integer.valueOf(6));
-
-      // list all the services that are implemented on the node that this client is connected to
-
-      System.out.println("Services on the connected node. (without registry)");
-      client.getNodeServices(); // get all registered services 
-
-      // ############### Contacting the registry just so you see how it can be done
-
-      if (args[5].equals("true")) { 
-        // Comment these last Service calls while in Activity 1 Task 1, they are not needed and wil throw issues without the Registry running
-        // get thread's services
-        client.getServices(); // get all registered services 
-
-        // get parrot
-        client.findServer("services.Echo/parrot"); // get ONE server that provides the parrot service
-        
-        // get all setJoke
-        client.findServers("services.Joke/setJoke"); // get ALL servers that provide the setJoke service
-
-        // get getJoke
-        client.findServer("services.Joke/getJoke"); // get ALL servers that provide the getJoke service
-
-        // does not exist
-        client.findServer("random"); // shows the output if the server does not find a given service
+            break;
+          case 3:
+            quit = true;
+            break;
+          default:
+            System.out.println("Unknown service!");
+            break;
+        }
       }
+
+//      ///TESTING_LIBRARY///
+//      client.donate("title1", "author1", "genre1");
+//      client.donate("title2", "author2", "genre2");
+//      client.books();
+//      client.borrow("title1", "Alper");
+//      client.books();
+
+//      ///TESTING_ZODIAC///
+//      System.out.print("Enter name: ");
+//      String name = scan.nextLine();
+//      System.out.print("Enter birth month: ");
+//      String month = scan.nextLine();
+//      System.out.print("Enter birth day: ");
+//      int day = scan.nextInt();
+//      client.sign(name, month, day);
+//
+//      client.sign("person1", "Jan", 11);
+//
+//      client.sign("person2", "Jan", 12);
+//
+//      client.find("Capricorn");
+
+//      ///TESTING_RPS///
+//      System.out.println("Enter your name:");
+//      String name = reader.readLine();
+//      System.out.println("Enter your move (0 for ROCK, 1 for PAPER, 2 for SCISSORS):");
+//      int move = scan.nextInt();
+//
+//      // Convert the move integer to the corresponding enum value
+//      PlayReq.Played played;
+//      switch (move) {
+//        case 0:
+//          played = PlayReq.Played.ROCK;
+//          break;
+//        case 1:
+//          played = PlayReq.Played.PAPER;
+//          break;
+//        case 2:
+//          played = PlayReq.Played.SCISSORS;
+//          break;
+//        default:
+//          System.err.println("Invalid move");
+//          return; // exit the program or handle the error as appropriate
+//      }
+//
+//      client.play(name, played);
+//      client.leaderboard();
+
+//      ////TESTING////
+//      // call the parrot service on the server
+//      client.askServerToParrot(message);
+//
+//      // Reading data using readLine
+//      System.out.println("How many jokes would you like?"); // NO ERROR handling of wrong input here.
+//      String num = reader.readLine();
+//
+//      // calling the joked service from the server with num from user input
+//      client.askForJokes(Integer.valueOf(num));
+//
+//      // adding a joke to the server
+//      client.setJoke("I made a pencil with two erasers. It was pointless.");
+//
+//      // showing 6 joked
+//      client.askForJokes(Integer.valueOf(6));
+//
+//      // list all the services that are implemented on the node that this client is connected to
+//
+//      System.out.println("Services on the connected node. (without registry)");
+//      client.getNodeServices(); // get all registered services
+//      ////TESTING////
+//
+//      // ############### Contacting the registry just so you see how it can be done
+//
+//      if (args[5].equals("true")) {
+//        // Comment these last Service calls while in Activity 1 Task 1, they are not needed and wil throw issues without the Registry running
+//        // get thread's services
+//        client.getServices(); // get all registered services
+//
+//        // get parrot
+//        client.findServer("services.Echo/parrot"); // get ONE server that provides the parrot service
+//
+//        // get all setJoke
+//        client.findServers("services.Joke/setJoke"); // get ALL servers that provide the setJoke service
+//
+//        // get getJoke
+//        client.findServer("services.Joke/getJoke"); // get ALL servers that provide the getJoke service
+//
+//        // does not exist
+//        client.findServer("random"); // shows the output if the server does not find a given service
+//      }
 
     } finally {
       // ManagedChannels use resources like threads and TCP connections. To prevent
