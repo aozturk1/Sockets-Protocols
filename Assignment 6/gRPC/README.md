@@ -1,3 +1,6 @@
+Video Link: https://youtu.be/p63iuMHt1Qw
+GitHub Link: https://github.com/aozturk1/ser321-spring2023-C-aozturk1/tree/master/Assignment%206/gRPC
+
 # GRPC Services and Registry Project Description
 
 A simple gRPC service with Node, Client, and Registry. Client can connect to the nodes
@@ -60,6 +63,7 @@ rpc donate (DonateRequest) returns (DonateResponse) {}
 rpc books (google.protobuf.Empty) returns (BooksResponse) {}
 }
 ```
+```
 message Book {
 string title = 1;
 string author = 2;
@@ -67,16 +71,19 @@ string has = 3;
 string genre = 4;
 }
 ```
+```
 message BorrowRequest {
 string title = 1;
 string has = 2;
 }
+```
 ```
 message BorrowResponse {
 bool isSuccess = 1;
 string error = 2;
 string message = 3;
 }
+```
 ```
 message DonateRequest {
 string title = 1;
@@ -85,11 +92,13 @@ string has = 3;
 string genre = 4;
 }
 ```
+```
 message DonateResponse {
 bool isSuccess = 1;
 string error = 2;
 string message = 3;
 }
+```
 ```
 message BooksResponse {
 bool isSuccess = 1;
