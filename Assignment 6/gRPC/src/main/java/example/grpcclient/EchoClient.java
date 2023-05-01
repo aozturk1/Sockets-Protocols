@@ -64,7 +64,7 @@ public class EchoClient {
       System.err.println("RPC failed: " + e.getMessage());
       return;
     }
-    System.out.println("Received from server: " + response.getMessage());
+    System.out.println("Received from server: askServerToParrot" + response.getMessage());
   }
 
   public void askForJokes(int num) {
@@ -73,7 +73,7 @@ public class EchoClient {
     try {
       response = blockingStub2.getJoke(request);
     } catch (Exception e) {
-      System.err.println("RPC failed: " + e);
+      System.err.println("RPC failed: askForJokes" + e);
       return;
     }
     System.out.println("Your jokes: ");
@@ -89,7 +89,7 @@ public class EchoClient {
       response = blockingStub2.setJoke(request);
       System.out.println(response.getOk());
     } catch (Exception e) {
-      System.err.println("RPC failed: " + e);
+      System.err.println("RPC failed: setJoke" + e);
       return;
     }
   }
@@ -105,7 +105,7 @@ public class EchoClient {
       }
       //System.out.println(response.toString());
     } catch (Exception e) {
-      System.err.println("RPC failed: " + e);
+      System.err.println("RPC failed: getNodeServices" + e);
       return;
     }
   }
@@ -117,7 +117,7 @@ public class EchoClient {
       response = blockingStub3.getServices(request);
       System.out.println(response.toString());
     } catch (Exception e) {
-      System.err.println("RPC failed: " + e);
+      System.err.println("RPC failed: getServices" + e);
       return;
     }
   }
@@ -129,7 +129,7 @@ public class EchoClient {
       response = blockingStub3.findServer(request);
       System.out.println(response.toString());
     } catch (Exception e) {
-      System.err.println("RPC failed: " + e);
+      System.err.println("RPC failed: findServer" + e);
       return;
     }
   }
@@ -141,7 +141,7 @@ public class EchoClient {
       response = blockingStub3.findServers(request);
       System.out.println(response.toString());
     } catch (Exception e) {
-      System.err.println("RPC failed: " + e);
+      System.err.println("RPC failed: findServers" + e);
       return;
     }
   }
@@ -154,7 +154,7 @@ public class EchoClient {
       response = blockingStub6.play(request);
       System.out.println(response.toString());
     } catch (Exception e) {
-      System.err.println("RPC failed: " + e);
+      System.err.println("RPC failed: play" + e);
       return;
     }
   }
@@ -167,7 +167,7 @@ public class EchoClient {
       response = blockingStub6.leaderboard(request);
       System.out.println(response.toString());
     } catch (Exception e) {
-      System.err.println("RPC failed: " + e);
+      System.err.println("RPC failed: leaderboard" + e);
       return;
     }
   }
@@ -180,7 +180,7 @@ public class EchoClient {
       response = blockingStub5.sign(request);
       System.out.println(response.toString());
     } catch (Exception e) {
-      System.err.println("RPC failed: " + e);
+      System.err.println("RPC failed: sign" + e);
       return;
     }
   }
@@ -193,7 +193,7 @@ public class EchoClient {
       response = blockingStub5.find(request);
       System.out.println(response.toString());
     } catch (Exception e) {
-      System.err.println("RPC failed: " + e);
+      System.err.println("RPC failed: find" + e);
       return;
     }
   }
