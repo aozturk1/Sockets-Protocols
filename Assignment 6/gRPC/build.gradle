@@ -68,6 +68,8 @@ def message = "Hello you" // for the echo service in the node
 
 def regOn = false;
 
+def auto = 0;
+
 // task reading in the arguments if any given, if not the default from above will be used
 task arguments {
     if (project.hasProperty("nodeName")) {
@@ -99,6 +101,9 @@ task arguments {
     }
     if (project.hasProperty("regOn")) {
         regOn = project.getProperty("regOn")
+    }
+    if (project.hasProperty("auto")) {
+        auto = project.getProperty("auto")
     }
 }
 
@@ -154,7 +159,25 @@ task runClient(type: JavaExec) {
     args grpcPort
     args message
     args regOn
+    args auto
 }
+
+////gradle runClient -Phost=host -Pport=port -Pauto=1
+//task runClient(type: JavaExec) {
+//    dependsOn arguments
+//    classpath = sourceSets.main.runtimeClasspath
+//    description = "Run Client"
+//    main = 'example.grpcclient.EchoClient'
+//    standardInput = System.in
+//    // default args
+//    args serviceHost
+//    args servicePort
+//    args registryHost
+//    args grpcPort
+//    args message
+//    args regOn
+//    args auto
+//}
 
 // runs a service node which already has the echo and joke service included
 task runNode(type: JavaExec) {
@@ -171,6 +194,36 @@ task runNode(type: JavaExec) {
     args regOn
 }
 
+// runs a client which will run some commands on a node and also on the registration node
+task runClient2(type: JavaExec) {
+    dependsOn arguments
+    classpath = sourceSets.main.runtimeClasspath
+    description = "Run Client"
+    main = 'example.grpcclient.Client'
+    standardInput = System.in
+    // default args
+    args serviceHost
+    args servicePort
+    args registryHost
+    args grpcPort
+    args message
+    args regOn
+}
+
+// runs a service node which already has the echo and joke service included
+task registerServiceNode(type: JavaExec) {
+    dependsOn arguments
+    classpath = sourceSets.main.runtimeClasspath
+    description = "Run Server"
+    main = 'example.grpcclient.NodeService'
+    // default args
+    args registryHost
+    args grpcPort
+    args serviceHost
+    args servicePort
+    args nodeName
+    args regOn
+}
 
 // How I ran it:
 // ser321test.duckdns.org is my IP on the first AWS instance

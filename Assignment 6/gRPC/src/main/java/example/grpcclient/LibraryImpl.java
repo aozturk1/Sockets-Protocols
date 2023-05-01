@@ -13,9 +13,11 @@ import java.util.List;
 
 public class LibraryImpl extends LibraryGrpc.LibraryImplBase implements Serializable {
     //TODO
-    // 1. Input sanitization
-    // 2. Specific errors for availability
-
+    // Input sanitization
+    // Extra server online
+    // Nice output
+    // Registry
+    // Specific errors for availability(Library)
 
     List<Book> books;
     public static String file = "books.data";
@@ -29,13 +31,9 @@ public class LibraryImpl extends LibraryGrpc.LibraryImplBase implements Serializ
         String has = request.getHas();
         String title = request.getTitle();
 
-        System.out.println("Here1");
-
         boolean available = false;
         boolean exist = false;
         Book bookCopy = null;
-
-        System.out.println("Here2");
 
         //Determine if the book exists
         for (Book book : books) {
@@ -51,15 +49,12 @@ public class LibraryImpl extends LibraryGrpc.LibraryImplBase implements Serializ
             }
         }
 
-        System.out.println("Here3");
-
         BorrowResponse.Builder builder = BorrowResponse.newBuilder()
                 .setIsSuccess(false);
         //book exists
         if (exist){
             //book is available
             if (available) {
-                System.out.println("Here4");
                 builder.setIsSuccess(true);
                 builder.setMessage("Happy Reading!");
                 Book newBook = Book.newBuilder()
@@ -78,14 +73,11 @@ public class LibraryImpl extends LibraryGrpc.LibraryImplBase implements Serializ
             builder.setError("Oops, No such book!");
         }
 
-        System.out.println("Here5");
-
         //Send the response back to the client
         BorrowResponse response = builder.build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();
         save();
-        System.out.println("Here6");
     }
 
     public static LibraryImpl load() {
