@@ -13,7 +13,6 @@ import java.util.List;
 
 public class LibraryImpl extends LibraryGrpc.LibraryImplBase implements Serializable {
     //TODO
-    // Extra server online
     // Input sanitization
     // Nice output
     // Registry
