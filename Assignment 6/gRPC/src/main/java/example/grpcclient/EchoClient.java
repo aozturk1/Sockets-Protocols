@@ -250,7 +250,6 @@ public class EchoClient {
       } else {
         System.out.println(response.getError());
       }
-      System.out.println(">>>>>>>>>>>>>>TESTING RESPONSE BELOW SEARCH 777 TO DELETE");
       System.out.println(response.toString());
     } catch (Exception e) {
       System.err.println("RPC failed: read " + e);
@@ -270,7 +269,6 @@ public class EchoClient {
       } else {
         System.out.println(response.getError());
       }
-      System.out.println(">>>>>>>>>>>>>>TESTING RESPONSE BELOW SEARCH 888 TO DELETE");
       System.out.println(response.toString());
     } catch (Exception e) {
       System.err.println("RPC failed: search " + e);
@@ -289,7 +287,6 @@ public class EchoClient {
       } else {
         System.out.println(response.getError());
       }
-      System.out.println(">>>>>>>>>>>>>>TESTING RESPONSE BELOW SEARCH 111 TO DELETE");
       System.out.println(response.toString());
     } catch (Exception e) {
       System.err.println("RPC failed: write " + e);
@@ -309,7 +306,6 @@ public class EchoClient {
       } else {
         System.out.println(response.getError());
       }
-      System.out.println(">>>>>>>>>>>>>>TESTING RESPONSE BELOW SEARCH 333 TO DELETE");
       System.out.println(response.toString());
     } catch (Exception e) {
       System.err.println("RPC failed: read " + e);
@@ -329,7 +325,6 @@ public class EchoClient {
       } else {
         System.out.println(response.getError());
       }
-      System.out.println(">>>>>>>>>>>>>>TESTING RESPONSE BELOW SEARCH 444 TO DELETE");
       System.out.println(response.toString());
     } catch (Exception e) {
       System.err.println("RPC failed: search " + e);
@@ -347,7 +342,6 @@ public class EchoClient {
       } else {
         System.out.println(response.getError());
       }
-      System.out.println(">>>>>>>>>>>>>>TESTING RESPONSE BELOW SEARCH 222 TO DELETE");
       System.out.println(response.toString());
     } catch (Exception e) {
       System.err.println("RPC failed: write " + e);
